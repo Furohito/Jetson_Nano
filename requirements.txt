@@ -1,0 +1,10 @@
+# ==== Python packages (JetPack 4.6, Python 3.6) ====
+# Sebagian besar tersedia sebagai paket apt. Gunakan apt lebih dulu.
+# File ini sebagai referensi versi minimum.
+
+numpy>=1.19,<1.20
+opencv-python==4.5.5.64   # atau pakai python3-opencv dari apt
+PyGObject>=3.26           # python3-gi
+Jetson.GPIO>=2.0.17       # python3-jetson-gpio
+tensorrt>=8.0             # python3-libnvinfer (dari JetPack)
+ultralytics>=8.0          # hanya untuk ekspor .pt -> .engine (host PC)
