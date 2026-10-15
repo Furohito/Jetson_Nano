@@ -1,8 +1,10 @@
 # 🚦 Traffic Sign Detection — Jetson Nano + TensorRT YOLOv8 + GPIO LEDs
 
 Sistem deteksi rambu lalu lintas **real-time** berbasis **Jetson Nano** menggunakan
-kamera CSI **IMX219**, model **YOLOv8** yang dikonversi ke **TensorRT engine**,
+kamera CSI **IMX219**, model **YOLOv8** yang sudah dikonversi ke **TensorRT engine**,
 serta indikator **3 LED** (STOP / SLOW / GO) yang dikendalikan melalui GPIO.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
@@ -12,6 +14,9 @@ Program menerima frame dari kamera CSI, menjalankan inferensi YOLOv8 pada GPU
 Jetson melalui TensorRT, lalu mengklasifikasikan rambu ke dalam 3 kelas:
 `stop`, `slow`, `go`. Kelas dengan confidence tertinggi yang **stabil selama
 beberapa frame berturut-turut** akan menyalakan LED yang sesuai.
+
+Model sudah tersedia dalam bentuk **`best.engine`** (TensorRT) — cukup diletakkan
+di folder `models/` dan program langsung siap dijalankan.
 
 ---
 
@@ -84,7 +89,7 @@ beberapa frame berturut-turut** akan menyalakan LED yang sesuai.
 
 ## 🔌 Wiring LED
 
-Lihat detail pada [`docs/wiring.md`](docs/wiring.md).
+Detail lengkap ada di [`docs/wiring.md`](docs/wiring.md).
 
 **Rangkaian LED Active-LOW (per LED):**
 
@@ -93,10 +98,10 @@ Lihat detail pada [`docs/wiring.md`](docs/wiring.md).
                                                                (11/13/15)
 ```
 
-Ketika GPIO output `LOW` → LED menyala.
-Ketika GPIO output `HIGH` → LED mati.
+- GPIO output `LOW`  → **LED menyala**
+- GPIO output `HIGH` → **LED mati**
 
-> Untuk melihat panduan wiring di terminal:
+> Lihat panduan wiring di terminal:
 > ```bash
 > python3 src/traffic_sign_jetson.py --wiring
 > ```
@@ -108,7 +113,11 @@ Ketika GPIO output `HIGH` → LED mati.
 ### 1. Persiapan JetPack
 
 Flash Jetson Nano dengan JetPack 4.6.x (mengandung CUDA 10.2 + TensorRT 8).
-Setelah booting, jalankan `sudo apt update && sudo apt upgrade`.
+Setelah booting, jalankan:
+
+```bash
+sudo apt update && sudo apt upgrade
+```
 
 ### 2. Clone repositori
 
@@ -131,23 +140,15 @@ Atau pakai `requirements.txt`:
 pip3 install -r requirements.txt
 ```
 
-### 4. Siapkan model TensorRT
+### 4. Siapkan model
 
-Letakkan file `best.engine` pada:
+Letakkan file `best.engine` (sudah tersedia) pada:
 
 ```
 ~/traffic-sign-project/models/best.engine
 ```
 
-Untuk membuat `best.engine` dari `best.pt` (YOLOv8):
-
-```bash
-# Di PC host
-pip install ultralytics
-yolo export model=best.pt format=engine imgsz=320
-```
-
-Kemudian copy ke Jetson via `scp`.
+Atau sesuaikan path-nya di `src/traffic_sign_jetson.py` pada variabel `ENGINE_PATH`.
 
 ### 5. Periksa lingkungan
 
@@ -208,17 +209,24 @@ python3 src/traffic_sign_jetson.py --no-preview --max-frames 300
 ```
 .
 ├── README.md
+├── LICENSE
 ├── requirements.txt
 ├── .gitignore
 ├── src/
 │   └── traffic_sign_jetson.py     # source code utama
 ├── models/
-│   └── README.md                  # info model
+│   ├── README.md                  # info model
+│   └── best.engine                # TensorRT engine (siap pakai)
 ├── docs/
 │   ├── arsitektur.md              # arsitektur sistem
 │   ├── wiring.md                  # dokumentasi rangkaian
 │   └── pengujian.md               # hasil pengujian
 ├── images/                        # gambar & foto
+│   ├── arsitektur.png
+│   ├── wiring.png
+│   ├── dokumentasi-praktikum.jpg
+│   ├── screenshot-deteksi.png
+│   └── screenshot-led-test.png
 └── test-results/
     └── log-pengujian.txt          # log output program
 ```
@@ -229,11 +237,11 @@ python3 src/traffic_sign_jetson.py --no-preview --max-frames 300
 
 | File | Deskripsi |
 |------|-----------|
-| `images/arsitektur.png`      | Diagram arsitektur sistem |
-| `images/wiring.png`          | Skema rangkaian LED + Jetson |
-| `images/foto-hardware.jpg`   | Foto setup Jetson + kamera + LED |
-| `images/screenshot-deteksi.png` | Screenshot deteksi rambu berjalan |
-| `images/screenshot-led-test.png`| Screenshot uji LED |
+| `images/arsitektur.png`            | Diagram arsitektur sistem |
+| `images/wiring.png`                | Skema rangkaian LED + Jetson |
+| `images/dokumentasi-praktikum.jpg` | Foto setup Jetson + kamera + LED |
+| `images/screenshot-deteksi.png`    | Screenshot deteksi rambu berjalan |
+| `images/screenshot-led-test.png`   | Screenshot uji LED |
 
 ---
 
@@ -251,10 +259,12 @@ MIT License — lihat file [`LICENSE`](LICENSE).
 
 ---
 
-## 👤 Author
+## 👥 Tim Pengembang
 
-1. Abdurrahman Hakim Makarim 2023071010
-2. Nurfajrian Abdurrohman 2023071045
-3. Zaky Naufal Saleh 20240708
-4. Ziyan Faiq 2024071014
-5. Daffa Rinaldi 2024071024
+| No | Nama                        | NIM        |
+|----|-----------------------------|------------|
+| 1  | Abdurrahman Hakim Makarim   | 2023071010 |
+| 2  | Nurfajrian Abdurrohman      | 2023071045 |
+| 3  | Zaky Naufal Saleh           | 20240708   |
+| 4  | Ziyan Faiq                  | 2024071014 |
+| 5  | Daffa Rinaldi               | 2024071024 |
